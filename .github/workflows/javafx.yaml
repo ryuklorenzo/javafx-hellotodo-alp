@@ -22,10 +22,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Descargar + Instalar
+    - name: Descargar y descomprimir
       run: |
         wget https://download2.gluonhq.com/openjfx/21.0.10/openjfx-21.0.10_linux-x64_bin-sdk.zip
         unzip openjfx-21.0.10_linux-x64_bin-sdk.zip -d javafx-sdk
-        javac --module-path javafx-sdk/javafx-sdk-21.0.10/lib --add-modules javafx.controls -d build/ src/dam/optativa/HelloWorldFx.java
-        jar --create --file=build/HelloWorldFx.jar --manifest=manifest/MANIFEST.MF -C build/ .
-        jpackage --input build/ --name HelloWorldFx --main-jar HelloWorldFx.jar --main-class dam.optativa.HelloWorldFx --type deb --module-path javafx-sdk/javafx-sdk-21.0.10/lib --add-modules javafx.controls
+        
+    - name: Hacer el archivo .jar
+      run: | 
+      javac --module-path javafx-sdk/javafx-sdk-21.0.10/lib --add-modules javafx.controls -d build/ src/dam/optativa/HelloWorldFx.java
+      jar --create --file=build/HelloWorldFx.jar --manifest=manifest/MANIFEST.MF -C build/ .
+      
+    - name: Hacer el .deb
+      run: jpackage --input build/ --name HelloWorldFx --main-jar HelloWorldFx.jar --main-class dam.optativa.HelloWorldFx --type deb --module-path javafx-sdk/javafx-sdk-21.0.10/lib --add-modules javafx.controls
